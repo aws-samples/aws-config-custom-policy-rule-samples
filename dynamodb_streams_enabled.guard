@@ -1,0 +1,10 @@
+# Rule-intent : Rule checks if dynamodb streams is enabled for the table
+#
+# Expectations:
+# a) COMPLIANT when dynamodb streams is enabled for the table
+# b) NONCOMPLIANT when dynamodb streams is not enabled for the table
+# c) NOTAPPLICABLE if resource is any other than DynamoDB
+
+rule check_ddb_streams_enabled when resourceType == "AWS::DynamoDB::Table"{
+     configuration.streamSpecification.streamEnabled == true
+}

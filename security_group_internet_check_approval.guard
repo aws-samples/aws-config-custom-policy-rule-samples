@@ -1,0 +1,25 @@
+#Rule-intent: Rule checks if Security Group allows internet access without security approval
+#
+# Expectations:
+# 1) COMPLIANT if Security Group allows internet access and has 'SecurityApproval' resource tag and its value set
+# 2) NOCOMPLIANT if Security Group allows internet access and does not have 'SecurityApproval' resource tag and value
+# 3) NOTAPPLICABLE if Security Group does not allow internet access
+
+# CIDR for internet access
+let blocked_range = "0.0.0.0/0"
+
+# Resource Tag name
+let tags_security_approval_key = "SecurityApproval"
+
+rule checkcompliance when
+resourceType == "AWS::EC2::SecurityGroup"
+{
+    when configuration.ipPermissions.* !empty
+    {
+        let ip_permissions - configuration.ipPermissions
+        when %ip_permissions.*.ipRanges == $blocked_range
+        {
+            tags.%tags_security_approval_key !empty
+        }
+    }
+}

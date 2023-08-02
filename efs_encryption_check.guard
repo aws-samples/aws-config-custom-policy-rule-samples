@@ -1,0 +1,9 @@
+# Rule-intent : Rule checks if encryption is enabled for the EFS file systems
+#
+# Expectations:
+# a) COMPLIANT when encryption is enabled for a EFS file system
+# b) NONCOMPLIANT if encryption is not enabled
+
+rule efs_encrypted_check when resourceType == "AWS::EFS::FileSystem" {
+	configuration.Encrypted == true
+}

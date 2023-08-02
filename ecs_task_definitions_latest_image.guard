@@ -1,0 +1,15 @@
+
+# Rule-intent : Rule checks if any ECS task definitions are running on ':latest' # version of the container images.
+#
+# Expectations:
+# a) NONCOMPLIANT when the Image version is not "latest"
+# b) NOTAPPLICABLE when the Image version is "latest"
+
+rule check_container_image {
+configuration.ContainerDefinitions[*] {
+	Image != /:latest$/
+	<< Image must be of specific version >>
+}
+}
+
+

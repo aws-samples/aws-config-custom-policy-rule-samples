@@ -1,0 +1,14 @@
+# Rule-intent : Rule checks if CloudWatch Alarms have an associated action
+#
+# Expectations:
+# a) COMPLIANT when a CloudWatch Alarm has actions associated with it
+# b) NONCOMPLIANT if there are no actions associated with it
+
+
+rule check_alarm_without_actions when resourceType == "AWS::CloudWatch::Alarm" {
+	configuration.alarmActions !empty 
+	<<
+	No actions were found for
+    alarm
+    >>
+}

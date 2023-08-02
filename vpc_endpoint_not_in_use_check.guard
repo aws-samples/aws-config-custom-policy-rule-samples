@@ -1,0 +1,17 @@
+# Rule-intent : Rule checks if there is an unused VPCEndpoint regardless of VPCendpointType
+#
+# Expectations:
+# a) COMPLIANT When VPCendpointType is Interface and InterfaceEndpoint exists, it must be associated to one or more subnets or When VPCendpointType is Gateway and GatewayEndpoint exists, it must be associated to one or more routetables
+# b) NONCOMPLIANT When VPCendpointType is Interface and InterfaceEndpoint exists, it is not associated to any SubnetIds or When VPCendpointType is Gateway and GatewayEndpoint exists, it is not associated to any routetableIds
+
+rule VPCEndpointIsRtbAssociated {
+    when configuration.vpcEndpointType == 'Gateway' {
+        configuration.routeTableIds !empty << VPC Gateway Endpoint is Not in use >>
+    }
+}
+
+rule VPCEndpointIsSubnetIdsAssociated {
+    when configuration.vpcEndpointType == 'Interface' {
+        configuration.subnetIds !empty << VPC Interface Endpoint is Not in use >>
+    }
+}

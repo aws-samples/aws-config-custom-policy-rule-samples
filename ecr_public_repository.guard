@@ -1,0 +1,12 @@
+
+# Rule-intent : Rule checks if ECR has any public repository 
+#
+# Expectations:
+# a) NONCOMPLIANT when Public repository is detected in ECR
+# b) NOTAPPLICABLE when no Public repositoryrepository is detected in ECR
+#
+
+rule check_ecr_public_repository {
+	configuration.RepositoryName empty
+	<< Detected public ECR repository >>
+}

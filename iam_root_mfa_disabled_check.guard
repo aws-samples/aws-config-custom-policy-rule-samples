@@ -1,0 +1,20 @@
+# Rule-intent : Rule to check if Root Account MFA is disabled but MFA for IAM User Console Access is enabled. 
+#
+# Expectations:
+# a) COMPLIANT when there are IAM users with MFA enabled and root account has no MFA enabled
+# b) NONCOMPLIANT if there are no IAM users with MFA enabled
+# c) NOTAPPLICABLE if there are MFA for IAM users and root account enabled
+
+let iam_users_and_root = Resources.*[Type == 'AWS::Config::ConfigRule']
+
+rule check_mfa_enabled_for_iam_console_access when %iam_users_and_root!empty {
+  %iam_users_and_root {
+    Properties.Source.SourceIdentifier[ * ] == "MFA_ENABLED_FOR_IAM_CONSOLE_ACCESS"
+  }
+}
+
+rule check_mfa_enabled_for_iam_console_access_except_root when check_mfa_enabled_for_iam_console_access {
+ %iam_users_and_root {
+ Properties.Source.SourceIdentifier[*] != "ROOT_ACCOUNT_MFA_ENABLED"
+ }
+}

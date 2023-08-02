@@ -1,0 +1,28 @@
+
+# Rule-intent : Rule checks if http versions enabled on a Cloudfront Distribution, by default it checks for http2 or http3 or http2and3. Can be further parameterized to enforce a particular version. 
+
+#
+# Expectations:
+# a) COMPLIANT when  
+#	  input parameter allowedHttpVersion is not provided and if Cloudfront distribution`s httpVersion is enabled witn http2 or http3 or http2and3 ; 
+# 	inputallowedHttpVersion is provided and if httpVersion Cloudfront distribution`s httpVersion matches the input parameter allowedHttpVersion
+
+# b) NONCOMPLIANT when 
+#  input parameter allowedHttpVersion is not provided and if Cloudfront distribution`s httpVersion is not http2 or http3 or http2and3 ;
+
+#  input parameter allowedHttpVersion is provided and if httpVersion is doesn’t match with allowedHttpVersion
+
+
+rule cloudfront_http_versions_enabled when resourceType == "AWS::CloudFront::Distribution" {
+
+	# match the version to input parameter if version is provided as input
+	when CONFIG_RULE_PARAMETERS.allowedHttpVersion !empty {
+	configuration.distributionConfig.httpVersion == CONFIG_RULE_PARAMETERS.allowedHttpVersion
+	}
+
+	# check http2, 3 or both by default
+	when CONFIG_RULE_PARAMETERS.allowedHttpVersion empty {
+	configuration.distributionConfig.httpVersion in ["http2","http3","http2and3"]
+	}
+}
+

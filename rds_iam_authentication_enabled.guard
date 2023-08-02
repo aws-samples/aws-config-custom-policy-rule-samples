@@ -1,0 +1,24 @@
+# Rule-intent : Check if IAM authentication is enabled for "AWS::RDS::DBCluster" and "AWS::RDS::DBInstance"
+#
+# Expectations:
+# a) COMPLIANT when IAM Authentication is enabled for RDS DBCluster or RDS DBInstance
+# b) NONCOMPLIANT when IAM Authentication is not enabled for RDS DBCluster or RDS DBInstance
+
+let iamAuthenticationCluster = configuration.iamdatabaseAuthenticationEnabled
+let iamAuthenticationInstance = configuration.iAMDatabaseAuthenticationEnabled
+
+##Check whether IAM authencitation is enabled for the "AWS::RDS::DBCluster" resource type.
+rule rds_cluster_iam_authentication_enabled
+when resourceType == "AWS::RDS::DBCluster" {
+when %iamAuthenticationCluster !empty {
+%iamAuthenticationCluster == true << database cluster does not have IAM authentication enabled >>
+}
+}
+
+##Check whether IAM authentication is enabled for the "AWS::RDS::DBInstance" resource type.
+rule rds_instance_iam_authentication_enabled
+when resourceType == "AWS::RDS::DBInstance" {
+when %iamAuthenticationInstance !empty {
+%iamAuthenticationInstance == true << database instance does not have IAM authentication enabled >>
+}
+}

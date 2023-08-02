@@ -1,0 +1,11 @@
+#Rule-intent: Rule checks if AWS AppSyn GraphQL API Xray is enabled
+#
+# Expectations:
+# 1) COMPLIANT if AWS AppSyn GraphQL API Xray is enabled
+# 2) NOCOMPLIANT if AWS AppSyn GraphQL API Xray is disabled
+# 3) NOTAPPLICABLE if there is no AWS AppSyn GraphQL API
+
+rule check_appsync_xray_compliance {
+  configuration.XrayEnabled == true
+  <<AWS AppSync API Xray disabled.>>
+}

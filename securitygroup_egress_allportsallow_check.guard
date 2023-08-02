@@ -1,0 +1,26 @@
+# Rule-intent : Rule checks egress rule of security group to identify rules which are allowing All TCP or UDP port for all IPv4 in one rule.
+#
+# Expectations:
+# a) COMPLIANT when egress rule does not allow all ports for all ipv4 addresses
+# b) NONCOMPLIANT when egress rule allows all ports for all ipv4 addresses
+# c) NOTAPPLICABLE if egress rule does not have rules for TCP or UDP
+
+let targets = configuration.ipPermissionsEgress[
+ipProtocol == 'tcp' or
+ipProtocol == 'udp' ]
+
+rule check_sg_egress_rule_all_tcp_or_udp_port_allowed_for_all_ipv4_in_one_rule
+when %targets !empty {
+%targets[*]{
+ipProtocol == "tcp" or
+ipProtocol == "udp"
+when ipv4Ranges !empty{
+ipv4Ranges[*]{
+cidrIp == /(?i)0.0.0.0/
+}
+}
+when fromPort is_string{
+fromPort == "-1"
+}
+}
+}

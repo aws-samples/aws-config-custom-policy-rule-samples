@@ -1,0 +1,15 @@
+
+# Rule-intent : Rule checks if any EC2 instance is configured ENIs in different subnets.
+#
+# Expectations:
+# a) COMPLIANT when all ENIs attached to EC2 instance are in the same subnet
+# b) NONCOMPLIANT when ENIs attached to EC2 instance are in different subnets
+#
+
+let eniOne = configuration.networkInterfaces[0]
+rule check_eni_subnets {
+configuration.networkInterfaces[*] {
+subnetId == %eniOne.subnetId
+<< Dual Homed EC2 are a security risk >>
+}
+}

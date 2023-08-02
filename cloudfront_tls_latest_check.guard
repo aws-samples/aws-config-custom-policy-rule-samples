@@ -1,0 +1,11 @@
+# rule-intent : Check if any CloudFront distributions support TLS protocol version 1.0/SSLv3
+# Expectations:
+# a) COMPLIANT if a CloudFront distribution DOES NOT use any of the following security policies 
+# c) NOT COMPLIANT if a CloudFront distribution USES any of the following security policies 
+# List of policies:  TLSv1_2016, TLSv1, SSLv3
+
+rule check_if_tls10_or_sslv3 {
+    configuration.distributionConfig.viewerCertificate.minimumProtocolVersion !in ['TLSv1_2016', 'TLSv1', 'SSLv3'] <<
+    Cloudfront distribution supports TLS protocol version 1.0/SSLv3
+    >>
+}

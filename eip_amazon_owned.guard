@@ -1,0 +1,14 @@
+# Rule-intent : Rule checks if EIP is owned by Amazon
+#
+# Expectations:
+# a) COMPLIANT if EIP belongs to Amazon
+# b) NONCOMPLIANT if EIP does not belongs to Amazon
+
+rule check_amazon_owned_eip {
+    when configuration exists {
+        when configuration.publicIpv4Pool exists {
+            configuration.publicIpv4Pool == "amazon"
+            <<EIP is not Owned by Amazon>>
+        }
+    }
+}

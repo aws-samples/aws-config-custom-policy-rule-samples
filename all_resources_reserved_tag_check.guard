@@ -1,0 +1,27 @@
+# Rule-intent : Rule checks if Reserved Tags are only added on Resources created by SecurityAutomation
+#
+# Expectations:
+# a) COMPLIANT when a resource is using the reserved tag and is created by SecurityAutomation
+# b) NONCOMPLIANT when a resource is using reserved tags and not created by SecurityAutomation or missing the CreatedBy Tag
+# c) NOTAPPLICABLE if a resource is not using reserves tag
+
+let reserved_nametags = ['SEC_APPROVAL_ID','SEC_EXCEPTION_ID']
+# Resource CreatedBy Tag
+let tags_created_by_key = "CreatedBy"
+# Resource created by SecurityAutomation
+let tags_created_by_value = "SecurityAutomation"
+
+rule checkreservedtags
+when tags.%tags_created_by_key empty or
+tags.%tags_created_by_key != %tags_created_by_value
+{
+  configuration !empty
+  configuration.tags.*.key !in %reserved_nametags
+}
+rule checkreservedtags_forcreator
+when tags.%tags_created_by_key ==
+%tags_created_by_value
+{
+tags.* in %reserved_nametags or tags.* !in
+%reserved_nametags
+}

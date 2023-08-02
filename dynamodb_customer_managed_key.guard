@@ -1,0 +1,10 @@
+# Rule-intent : Rule checks if DynamoDB tables are encrypted with AWS managed key or Customer managed key
+#
+# Expectations:
+# a) COMPLIANT when a DynamoDB table is encrypted with AWS managed key or Customer managed key
+# b) NONCOMPLIANT if the DynamoDB table is encrypted AWS owned key (default)
+
+
+rule check_sse_enabled when resourceType == "AWS::DynamoDB::Table"{
+	configuration.ssedescription.status == "ENABLED"
+}

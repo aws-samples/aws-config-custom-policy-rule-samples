@@ -1,0 +1,18 @@
+# Rule intent: Rule checks if Network ACLs contain rules allowing unrestricted inbound traffic.
+#
+# Expectations:
+# a) COMPLIANT when a Network ACL does not contain inbound rule(s) allowing unrestricted inbound traffic
+# b) NON_COMPLIANT when a Network ACL contains an inbound rule(s) allowing unrestricted inbound traffic
+
+rule check_nacl_allow_unrestricted_inbound {
+let unrestricted_inbound_rules = configuration.entries[
+egress == false
+ruleAction == "allow"
+protocol == "-1"
+cidrBlock == "0.0.0.0/0" OR cidrBlock == "::/0"
+]
+%unrestricted_inbound_rules empty <<
+result: NON_COMPLIANT
+message: The Network ACL contains an inbound rule(s) allowing traffic from 0.0.0.0/0 or ::/0.
+>>
+}

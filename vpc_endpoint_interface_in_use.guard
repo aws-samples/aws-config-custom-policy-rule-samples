@@ -1,0 +1,14 @@
+# Rule-intent : Rule checks when VPCendpointType is Interface and InterfaceEndpoint exists, it must be connected to one or more subnets
+#
+# Expectations:
+# a) COMPLIANT when VPCendpointType is Interface and InterfaceEndpoint exists, it is associated to one or more subnets 
+# b) NONCOMPLIANT when VPCendpointType is Interface and InterfaceEndpoint exists, it is not associated to any SubnetIds
+# c) NOTAPPLICABLE if there is no InterfaceVPCendpoint
+
+let TargetvpcEndpointType = 'Interface'
+
+rule VPCEndpointIsSubnetIdsAssociated {
+    when configuration.vpcEndpointType == %TargetvpcEndpointType {
+        configuration.subnetIds !empty  << VPC Interface Endpoint is Not in use >>
+    }
+}

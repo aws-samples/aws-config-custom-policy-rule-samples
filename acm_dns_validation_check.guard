@@ -1,0 +1,13 @@
+# Rule-intent : Rule checks that Amazon issued ACM certificates have DNS based domain validation set
+#
+# Expectations:
+# a) COMPLIANT when all certificate domains have DNS based validation 
+# b) NONCOMPLIANT if any certificate domain does not have DNS based validation
+
+rule check_acm_certificate_domain_validation {
+  when configuration.type == "AMAZON_ISSUED" {
+    configuration.domainValidationOptions[*] {
+      validationMethod == "DNS"
+    }
+  }
+}

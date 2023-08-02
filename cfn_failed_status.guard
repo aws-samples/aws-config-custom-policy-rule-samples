@@ -1,0 +1,13 @@
+
+# Rule-intent : Rule checks if any Clouformation Stacks are in failed state. 
+#
+# Expectations:
+# a) COMPLIANT when CFN stacks status does not end with FAILED state. 
+# b) NONCOMPLIANT when CFN stack status is in FAILED state. 
+#
+
+rule failed_stacks {
+	configuration.stackStatus != /_FAILED$/
+	<< Stacks with *_FAILED status should be deleted >>
+	}
+

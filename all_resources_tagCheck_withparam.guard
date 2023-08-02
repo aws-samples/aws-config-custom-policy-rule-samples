@@ -1,0 +1,26 @@
+# this example shows two key value pair parameters provided
+# each pair uses a rule block
+# replace the 3 variable with the tag key and value names for each block
+rule no_tag_check when CONFIG_RULE_PARAMETERS !empty {
+tags !empty
+}
+rule tag1_check when no_tag_check {
+let tagkey = CONFIG_RULE_PARAMETERS.tag1key
+let tagvalue = CONFIG_RULE_PARAMETERS.tag1value
+when %tagkey !empty {
+tags.%tagkey !empty
+when %tagvalue !empty tags.%tagkey !empty{
+tags.%tagkey == %tagvalue
+}
+}
+}
+rule tag2_check when no_tag_check {
+let tagkey = CONFIG_RULE_PARAMETERS.tag2key
+let tagvalue = CONFIG_RULE_PARAMETERS.tag2value
+when %tagkey !empty {
+tags.%tagkey !empty
+when %tagvalue !empty tags.%tagkey !empty {
+tags.%tagkey == %tagvalue
+}
+}
+}

@@ -1,0 +1,46 @@
+# Rule-intent : Rule checks Check if subnets are running out of ipaddresses - flag when approx 5% are left
+#
+# Expectations:
+# a) COMPLIANT when there are enough free ips
+# b) NONCOMPLIANT when number of free ips is < 5% of subnet size
+# c) NOTAPPLICABLE when subnet mask does not match
+
+rule checker16 when configuration.cidrBlock == /\/16/ {
+configuration.availableIpAddressCount >= 3276
+}
+rule checker17 when configuration.cidrBlock == /\/17/ {
+configuration.availableIpAddressCount >= 1638
+}
+rule checker18 when configuration.cidrBlock == /\/18/ {
+configuration.availableIpAddressCount >= 818
+}
+rule checker19 when configuration.cidrBlock == /\/19/ {
+configuration.availableIpAddressCount >= 409
+}
+rule checker20 when configuration.cidrBlock == /\/20/ {
+configuration.availableIpAddressCount >= 204
+}
+rule checker21 when configuration.cidrBlock == /\/21/ {
+configuration.availableIpAddressCount >= 102
+}
+rule checker22 when configuration.cidrBlock == /\/22/ {
+configuration.availableIpAddressCount >= 51
+}
+rule checker23 when configuration.cidrBlock == /\/23/ {
+configuration.availableIpAddressCount >= 26
+}
+rule checker24 when configuration.cidrBlock == /\/24/ {
+configuration.availableIpAddressCount >= 13
+}
+rule checker25 when configuration.cidrBlock == /\/25/ {
+configuration.availableIpAddressCount >= 6
+}
+rule checker26 when configuration.cidrBlock == /\/26/ {
+configuration.availableIpAddressCount >= 3
+}
+rule checker27 when configuration.cidrBlock == /\/27/ {
+configuration.availableIpAddressCount >= 2
+}
+rule checker28 when configuration.cidrBlock == /\/28/ {
+configuration.availableIpAddressCount >= 1
+}

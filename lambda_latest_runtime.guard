@@ -1,0 +1,11 @@
+# Rule-intent : Rule checks if Lambda fucntions have the latest runtime version
+#
+# Expectations:
+# a) COMPLIANT when Lambda function is using the latest runtime
+# b) NONCOMPLIANT when Lambda function is not using the latest runtime
+
+let aws_lambda_function_resources = resourceType.*
+
+rule check_runtime_is_latest_version when %aws_lambda_function_resources !empty {
+  configuration.runtime == /nodejs16.x|python3.9|java11|dotnet6|go1.x|ruby2.7/
+}

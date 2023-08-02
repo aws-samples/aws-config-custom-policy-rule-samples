@@ -1,0 +1,11 @@
+#Rule-intent: Rules checks if any ALB listeners use TLS protocol version 1.0
+# Expectations:
+# a) COMPLIANT if an SSL listener and SSL policy IS NOT 'ELBSecurityPolicy-TLS-1-0-2015-04'
+# b) NOT COMPLIANT if an SSL listener and SSL policy IS 'ELBSecurityPolicy-TLS-1-0-2015-04'
+# c) NOT_APPLICABLE if the ALB listener protocol is not HTTPS
+rule check_if_tls10 when configuration.Protocol == 'HTTPS' {
+configuration.SslPolicy != 'ELBSecurityPolicy-TLS-1-0-2015-04' <<
+result: NON_COMPLIANT
+message: Application Load Balancer Listener is using TLS protocol version 1.0
+>>
+}

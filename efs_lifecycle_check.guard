@@ -1,0 +1,12 @@
+#Rule-intent: Rule checks if EFS Lifecycle Management is turned on
+#
+# Expectations:
+# 1) COMPLIANT if Amazon EFS Lifecycle management is turned off
+# 2) NOCOMPLIANT if Amazon EFS Lifecycle management is turned on
+# 3) NOTAPPLICABLE if there is no Amazon EFS volume
+
+rule checkEfsLifeCycleMgmt when
+  resourceType == "AWS::EFS::FileSystem" {
+    configuration.LifeCyclePolicies !empty
+    <<Amazon EFS Lifecycle policy is turned on.>>
+  }

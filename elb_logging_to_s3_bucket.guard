@@ -1,0 +1,15 @@
+
+# Rule-intent : Rule checks if ALB/NLB has logging enabled with s3 bucket
+#
+# Expectations:
+# a) COMPLIANT when ALB/NLB has logging enabled with s3 bucket
+# b) NONCOMPLIANT ALB/NLB has not logging enabled or with no s3 bucket as target
+#
+
+rule ELB_LOGGING_ENABLED when
+resourceType == "AWS::ElasticLoadBalancingV2::LoadBalancer" {
+	let accessLogBucket =
+	supplementaryConfiguration.LoadBalancerAttributes[ key ==
+	"access_logs.s3.bucket" ]
+	%accessLogBucket.value == CONFIG_RULE_PARAMETERS.targetBucket
+}

@@ -1,0 +1,12 @@
+# Rule-intent : Rule checks to see if KMS encrypted buckets are using bucket keys
+#
+# Expectations:
+# a) COMPLIANT when bucket has KMS encryption and has bucket keys enabled
+# b) NONCOMPLIANT when bucket has KMS encryption and does not have bucket keys enabled
+# c) NOTAPPLICABLE when no encryption or SSE-S3 encryption is used
+
+
+rule check_bucket_keys 
+when supplementaryConfiguration.ServerSideEncryptionConfiguration.rules.0.applyServerSideEncryptionByDefault.sseAlgorithm == "aws:kms"
+{  supplementaryConfiguration.ServerSideEncryptionConfiguration.rules.0.bucketKeyEnabled == true
+}

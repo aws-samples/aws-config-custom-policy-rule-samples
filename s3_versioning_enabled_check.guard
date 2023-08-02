@@ -1,0 +1,11 @@
+#Rule-intent: Rule checks if versioning enabled for Amazon S3 bucket
+#
+# Expectations:
+# 1) COMPLIANT if S3 bucket versioning is enabled
+# 2) NOCOMPLIANT if S3 bucket versioning is disabled
+# 3) NOTAPPLICABLE if there is no S3 bucket
+
+rule checkBucketVersioningEnabled {
+  supplementaryConfiguration.BucketVersioningConfiguration.status == "Enabled"
+  <<Amazon S3 bucket versioning is not enabled.>>
+}

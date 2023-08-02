@@ -1,0 +1,10 @@
+# Rule-intent : Rule checks if SNS Topics have encryption enabled
+#
+# Expectations:
+# a) COMPLIANT when a SNS Topic has associated encryption enabled
+# b) NONCOMPLIANT if a SNS Topic does not have encryption enabled
+
+rule check_sns_topic_encrypted {
+configuration.KmsMasterKeyId exists
+<<SNS topic is not encrypted>>
+}

@@ -1,0 +1,14 @@
+# Rule Intent: Rule checks if EC2 Instances have an IAM Instance Profile attached
+#
+# Expectations:
+# a) COMPLIANT when an EC2 instance has an IAM Instance Profile attached
+# b) NONCOMPLIANT when an EC2 instance does not have an IAM Instance Profile attached
+
+rule check_ec2_instance_profile {
+when configuration.iamInstanceProfile exists {
+configuration.iamInstanceProfile.arn not empty <<
+result: NON_COMPLIANT
+message: The Instance does not have an IAM Instance profiled attached
+>>
+}
+}

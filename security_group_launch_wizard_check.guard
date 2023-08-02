@@ -1,0 +1,10 @@
+#Rule-intent: Rule checks if Security Group name contains 'launch-wizard' in the name
+#
+# Expectations:
+# 1) COMPLIANT if Security Group name does not contain 'launch-wizard' in the name
+# 2) NOCOMPLIANT if Security Group name starts with'launch-wizard' in the name
+# 3) NOTAPPLICABLE if there is no Security Group resource
+
+rule compliancecheck when resourceType == "AWS::EC2::SecurityGroup" {
+    resourceName != /launch-wizard-(?i)/
+}

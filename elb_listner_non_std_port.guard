@@ -1,0 +1,22 @@
+# Rule-intent : Rule checks if ELB listner with Protocol as HTTP or HTTPS
+# is configured with a non-standard (HTTP -> 80, HTTPS ->443) port.
+#
+#
+# Expectations:
+# a) SKIP when Protocol for listner is other than HTTP and HTTPS
+# b) PASS when Protocol (HTTP/HTTPS) match standard ports (80/443).
+# c) FAIL when Protocol (HTTP/HTTPS) does not match standard ports (80/443).
+
+
+rule check_http_port when configuration.Protocol == 'HTTP'
+	{
+	configuration.Port == 80
+	<< HTTP protocol must be exposed on standard port 80 >>
+	}
+
+rule check_https_port when configuration.Protocol =='HTTPS' 
+	{
+	configuration.Port == 443
+	<< HTTPS protocol must be exposed on standard port 443 >>
+	}
+

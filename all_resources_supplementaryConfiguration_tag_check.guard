@@ -1,0 +1,18 @@
+# Rule Intent: Check if a resource has a specific resource tag key/value pair in the supplementaryConfiguration.
+#
+# Expectations:
+# a) COMPLIANT when the resource has a matching resource tag key/value pair
+# b) NONCOMPLIANT when the resource tag key/value pair does not match the parameters or if resource has no tags
+
+let tags = supplementaryConfiguration.Tags
+let keyParam = CONFIG_RULE_PARAMETERS.keyParam
+let valueParam = CONFIG_RULE_PARAMETERS.valueParam
+rule compliant {
+%tags exists
+%tags !empty
+let key = %tags.*[key == %keyParam]
+%key !empty
+when %key !empty {
+%key.value == %valueParam
+}
+}

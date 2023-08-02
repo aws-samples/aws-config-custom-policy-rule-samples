@@ -1,0 +1,22 @@
+# Rule Intent: Rules checks if an NLB is configured with the SSL policy specified in parameter. Works only 
+for NLB
+# Parameter: predefinedSslPolicy
+#
+# Expectations:
+# b) COMPLIANT if an NLB listener TLS policy is EQUAL to predefinedSslPolicy parameter value
+# c) NON_COMPLIANT if an NLB listener TLS policy is ANYTHING OTHER THAN predefinedSslPolicy parameter value
+# a) NOT_APPLICABLE if an NLB listener's protocol is not TLS. This should skip both ALB and Gateway Load 
+Balancer as well
+
+# CONFIG_RULE_PARAMETERS.predefinedSslPolicy
+let nlb_listener_ssl_policy = configuration.SslPolicy
+let nlb_listener_protocol = configuration.Protocol
+rule nlb_listener_ssl_policy_check{
+when %nlb_listener_protocol == 'TLS'{
+%nlb_listener_ssl_policy ==
+CONFIG_RULE_PARAMETERS.predefinedSslPolicy <<
+result: NON_COMPLIANT
+message: The NLB listener's policy does not match the desired policy.
+>>
+}
+}

@@ -1,0 +1,13 @@
+# Rule-intent : Guard rule to check if the source/destination check is disabled
+#
+# Expectations:
+# a) COMPLIANT if the source/destination check is turned off
+# b) NONCOMPLIANT if the source/destination check is turned on
+
+rule checkSrcDestChk when resourceType == "AWS::EC2::Instance" {
+	configuration.sourceDestCheck != false 
+	<<
+	result: NON_COMPLIANT
+	message: Source/destination check is NOT turned off.
+	>>
+}

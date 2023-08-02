@@ -1,0 +1,52 @@
+# Rule intent: Checks Transit Gateway (TGW) attachments to ensure compliance with defined network policies.
+# Depends on Serverless Transit Network Orchestrator (STNO) v3 or above to manage TGW attachments. STNO adds the required tags used by this rule.
+# Rule should only be applied with resource type AWS::EC2::TransitGatewayAttachment
+#
+# Expectations:
+# a) COMPLIANT when All the conditions are met
+# b) NONCOMPLIANT when
+# - Attachments associated with the "Isolated" route table propagate to "Isolated" (which breaks Isolation)
+# - Accounts in the Sandbox OU are associated with the "Infrastructure" route table (which could allow sandbox accounts to provide shared services)
+# - Attachments associated with the "Infrastructure" route table does not propagate to "Isolated" (which prevents Isolated VPCs from having access to shared services)
+# - Attachments associated with the "Isolated" route table does not propagate to "Infrastructure" (which prevents Isolated VPCs from having access to shared services)
+# 
+# c) NOTAPPLICABLE if TGW attachments do not have the required STNO tags
+
+# Variables:
+let sandbox_ou = 'Root/Sandbox/'
+let tgw_attachment_association = tags[ keys == 'Associate-with' ]
+let tgw_attachment_propagations = tags[ keys == 'Propagate-to' ]
+let tgw_attachment_ou = tags[ keys == 'account-ou' ]
+# Check that Isolated VPCs cannot talk to each other: 
+rule isolated_propagation_check when %tgw_attachment_association !empty {
+when %tgw_attachment_propagations !empty {
+when %tgw_attachment_association == /(?i)^Isolated$/ {
+%tgw_attachment_propagations != /(?i)(\w?|^)Isolated(\w?|$)/ << VPC attachment associated with the Isolated route table also propagating to Isolated, breaking isolation>>
+}
+}
+}
+# Check that Sandbox accounts do not provide shared Infrastructure services:
+rule sandbox_association_check when %tgw_attachment_ou !empty {
+when %tgw_attachment_association !empty {
+when %tgw_attachment_ou == %sandbox_ou {
+%tgw_attachment_association != /(?i)^Infrastructure$/ << Account in Sandbox OU associated with Infrastructure route table, providing shared services >>
+}
+}
+}
+# Check that Isolated VPCs have access to shared Infrastructure services,by checking both route directions:
+rule isolated_infrastructure_propagation_check when
+%tgw_attachment_association !empty {
+when %tgw_attachment_propagations !empty {
+  when %tgw_attachment_association == /(?i)^Isolated$/ {
+%tgw_attachment_propagations == /(?i)(\w?|^)Infrastructure(\w?|$)/ << Isolated VPC attachment does not propagate to Infrastructure route table, and does not have access to shared services >>
+}
+}
+}
+rule infrastructure_isolated_propagation_check when
+%tgw_attachment_association !empty {
+when %tgw_attachment_propagations !empty {
+when %tgw_attachment_association == /(?i)^Infrastructure$/ {
+%tgw_attachment_propagations == /(?i)(\w?|^)Isolated(\w?|$)/ << Infrastructure VPC attachment does not propagated to Isolated route table, and cannot provide shared services >>
+}
+}
+}

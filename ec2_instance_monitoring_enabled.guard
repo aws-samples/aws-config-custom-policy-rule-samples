@@ -1,0 +1,11 @@
+#Rule-intent: Rule checks if detailed monitoring is enabled on EC2
+#
+# Expectations:
+# 1) COMPLIANT if EC2 detailed monitoring is enabled
+# 2) NOCOMPLIANT if EC2 detailed monitoring is disabled
+# 3) NOTAPPLICABLE if there is no EC2 instance
+
+rule checkEC2InstanceDetailedMonitoringEnabled {
+  configuration.monitoring.state == 'enabled'
+  <<Amazon EC2 instance detailed monitoring is not enabled.>>
+}

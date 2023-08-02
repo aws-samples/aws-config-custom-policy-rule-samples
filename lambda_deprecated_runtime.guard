@@ -1,0 +1,22 @@
+# Rule-intent : Guard rule to check that deprecated or soon to be deprecated Lambda function runtimes are used
+#
+# Expectations:
+# a) COMPLIANT when deprecated or soon to be deprecated Lambda function runtimes are not used
+# b) NONCOMPLIANT when deprecated or soon to be deprecated Lambda function runtimes are used
+
+rule ALLOWED_LAMBDA_RUNTIMES_CHECK when resourceType == "AWS::Lambda::Function" {
+	configuration.runtime != "python3.6"
+	configuration.runtime != "python2.7"
+	configuration.runtime != "dotnetcore2.1"
+	configuration.runtime != "dotnetcore3.1"
+	configuration.runtime != "ruby2.5"
+	configuration.runtime != "nodejs12.x"
+	configuration.runtime != "nodejs10.x"
+	configuration.runtime != "nodejs8.10"
+	configuration.runtime != "nodejs6.10"
+	configuration.runtime != "nodejs4.3"
+	configuration.runtime != "dotnetcore1.0"
+	configuration.runtime != "dotnetcore2.0"
+	configuration.runtime != "nodejs4.3-edge"
+	configuration.runtime != "nodejs"
+}

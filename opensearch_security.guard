@@ -1,0 +1,30 @@
+# Rule-intent : Rule checks if OpenSearch Domains follow security best practice
+#
+# Expectations:
+# a) COMPLIANT when a OpenSearch doamin passes all the security check
+# b) NONCOMPLIANT if at least one of the rule failed
+
+rule node2node_encrypted when resourceType == "AWS::OpenSearch::Domain" {
+	configuration.NodeToNodeEncryptionOptions.Enabled == true
+}
+
+rule advancedSecurityOptions when resourceType == "AWS::OpenSearch::Domain" {
+	configuration.AdvancedSecurityOptions.Enabled == true
+}
+rule EncryptionAtRestOptions when resourceType == "AWS::OpenSearch::Domain" {
+	configuration.EncryptionAtRestOptions.KmsKeyId exists
+	configuration.EncryptionAtRestOptions.Enabled == true
+}
+rule DomainEndPointOptions when resourceType == "AWS::OpenSearch::Domain" {
+	configuration.DomainEndpointOptions.EnforceHTTPS == true
+	configuration.DomainEndpointOptions.TLSSecurityPolicy == "Policy-Min-TLS-1-2-2019-07"
+}
+rule AuditLogsEnabled when resourceType == "AWS::OpenSearch::Domain" {
+	configuration.LogPublishingOptions.AUDIT_LOGS exists
+	configuration.LogPublishingOptions.AUDIT_LOGS.Enabled == true
+	configuration.LogPublishingOptions.AUDIT_LOGS.CloudWatchLogsLogGroupArn exists
+}
+
+rule nonPublicDomain when resourceType == "AWS::OpenSearch::Domain" {
+	configuration.VPCOptions exists
+}

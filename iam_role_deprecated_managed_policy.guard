@@ -1,0 +1,29 @@
+# Rule-intent : Validate that an IAM role does not have any deprecated policies attached
+#
+# Expectations:
+# a) COMPLIANT when no deprecated managed policy is found in a role
+# b) NONCOMPLIANT if there are any depricated policy is found in a role
+
+rule check_attached {
+when configuration.attachedManagedPolicies !empty {
+configuration.attachedManagedPolicies.*.policyArn !in
+['arn:aws:iam::aws:policy/AWSCodePipelineFullAccess',
+'arn:aws:iam::aws:policy/AWSCodePipelineReadOnlyAccess',
+'arn:aws:iam::aws:policy/AWSElasticBeanstalkFullAccess',
+'arn:aws:iam::aws:policy/AWSElasticBeanstalkReadOnlyAccess',
+'arn:aws:iam::aws:policy/AWSLambdaFullAccess',
+'arn:aws:iam::aws:policy/AmazonDynamoDBFullAccesswithDataPipeline',
+'arn:aws:iam::aws:policy/AmazonEC2ContainerServiceAutoscaleRole',
+'arn:aws:iam::aws:policy/AmazonEC2ContainerServiceFullAccess',
+'arn:aws:iam::aws:policy/AmazonElasticMapReduceFullAccess',
+'arn:aws:iam::aws:policy/service-role/AWSConfigRole',
+'arn:aws:iam::aws:policy/service-role/AWSDataPipelineRole',
+'arn:aws:iam::aws:policy/service-role/AWSElasticBeanstalkService',
+'arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceRole',
+'arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM',
+'arn:aws:iam::aws:policy/service-role/AmazonElasticMapReduceRole'] 
+<<
+Deprecated policy is attached to this role
+>>
+}
+}

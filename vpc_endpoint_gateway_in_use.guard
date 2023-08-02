@@ -1,0 +1,14 @@
+# Rule-intent : Rule checks when VPCendpointType is Gateway and GatewayEndpoint exists, it must be connected to one or more routetables
+#
+# Expectations:
+# a) COMPLIANT when VPCendpointType is Gateway and GatewayEndpoint exists, it is associated to one or more routetables
+# b) NONCOMPLIANT when VPCendpointType is Gateway and GatewayEndpoint exists, it is not associated to any routetableIds
+# c) NOTAPPLICABLE if there is no GatewayVPCendpoint
+
+let TargetvpcEndpointType = 'Gateway'
+
+rule VPCEndpointIsRtbAssociated {
+    when configuration.vpcEndpointType == %TargetvpcEndpointType {
+        configuration.routeTableIds !empty << VPC Gateway Endpoint is Not in use >>
+    }
+}

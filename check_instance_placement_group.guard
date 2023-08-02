@@ -1,0 +1,11 @@
+# Rule Intent: Checks if EC2 instances belong to the given Placement Group.
+# Expectations:
+# a) COMPLIANT when an instance belongs to the given Placement group
+# b) NONCOMPLIANT when an instance does not belong to the given Placement group
+
+rule checkPlcmntGrp {
+configuration.placement.groupName == CONFIG_RULE_PARAMETERS.groupName <<
+result: NON_COMPLIANT
+message: The Instance does not belong to the given Placement group.
+>>
+}

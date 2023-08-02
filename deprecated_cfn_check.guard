@@ -1,0 +1,7 @@
+# rule-intent : Check if any CloudFront distributions support TLS protocol version 1.0/SSLv3
+# Expectations:
+# a) COMPLIANT if a CloudFront distribution DOES NOT use any of the following security policies 
+# c) NOT COMPLIANT if a CloudFront distribution USES any of the following security policies
+rule DEPRECATED_TEMPLATES_NOT_USED when resourceType == "AWS::CloudFormation::Stack" {
+  configuration.description != /(?i)deprecated/
+}

@@ -1,0 +1,28 @@
+# Rule-intent: Rule checks if a resource eligible for automatic application layer DDoS protection is protected by Shield Advanced
+#
+# Expectations:
+# a) COMPLIANT if an application layer DDoS protection eligible resource 
+has automatic application layer protection enabled.
+# b) NON_COMPLIANT if an application layer DDoS protection eligible 
+resource does not have automatic application layer protection enabled.
+# c) NOT_APPLICABLE if the Shield protected resource is not eligible for 
+automatic application layer protection. 
+
+#First, confirm the protection being evaluated is for a resource type that 
+is eligible for application layer DDOS mitigation.
+let protectedresourcetype = relationships.*[
+resourceType in [ 'AWS::CloudFront::Distribution',
+'AWS::ElasticLoadBalancingV2::LoadBalancer' ]
+]
+
+# Then, Check whether application layer DDOS mitigation is enabled for the 
+protection currently being evaluated.
+rule L7automitigationenabled {
+when %protectedresourcetype !empty {
+configuration.ApplicationLayerAutomaticResponseConfig.Status ==
+"ENABLED" <<
+   result: NON_COMPLIANT
+   message: This resource does not have automatic application layer protection enabled.
+>>  
+}
+}

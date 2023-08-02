@@ -1,0 +1,9 @@
+# Rule-intent : Rule checks if backup is enabled for the EFS file systems
+#
+# Expectations:
+# a) COMPLIANT when backup is enabled for a EFS file system
+# b) NONCOMPLIANT if backup is not enabled
+
+rule EFS_RESOURCES_PROTECTED_BY_BACKUP_PLAN when resourceType == "AWS::EFS::FileSystem" {
+	configuration.BackupPolicy.Status == "ENABLED"
+}

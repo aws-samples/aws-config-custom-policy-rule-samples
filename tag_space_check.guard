@@ -1,0 +1,14 @@
+#
+# Rule Intent: Check tag value to ensure there is no space at the start or end 
+# of the value.
+#
+# Expectations: 
+# a) SKIP when no tags are defined for that resource.
+# b) COMPLIANT when tag value don't have space at start or end.
+# c) NON COMPLIANT when a tag value has space at start or end.
+# 
+
+rule check_tag_space when tags !empty {
+    tags.* != /^ / << Tag value must not start with space >>
+    tags.* != / $/ << Tag value must not end with space >>
+}

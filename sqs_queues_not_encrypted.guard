@@ -1,0 +1,12 @@
+
+# Rule-intent : Rule checks if SQS Queues are encrypted or not. 
+#
+# Expectations:
+# a) COMPLIANT when SQS Queues are encrypted 
+# b) NONCOMPLIANT when SQS Queues are not encrypted 
+#
+
+rule check_sqs_queues_encryption { 
+	configuration. SqsManagedSseEnabled== "true" 
+	<< SQS Queues are not encrypted >>
+}

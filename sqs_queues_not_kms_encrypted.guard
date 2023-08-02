@@ -1,0 +1,12 @@
+
+# Rule-intent : Rule checks if  KMS encryption is enabled on SQS Queues 
+#
+# Expectations:
+# a) COMPLIANT when SQS Queues are enabled with KMS Key 
+# b) NONCOMPLIANT when SQS Queues are not enabled with KMS Key 
+#
+
+rule check_kms_encryption  { 
+	configuration.KmsMasterKeyId !empty
+	<< SQS Queues are not enabled with KMS Key encryption >>
+}

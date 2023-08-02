@@ -1,0 +1,5 @@
+rule DEPRECATED_TEMPLATES_NOT_USED 
+when resourceType =="AWS::CloudFormation::Stack"
+{
+configuration.description != /(?i)deprecated/
+}

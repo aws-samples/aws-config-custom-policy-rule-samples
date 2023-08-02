@@ -1,0 +1,21 @@
+# Rule Intent: Checks if an ALB is configured with the SSL policy specified in parameter. Works only for 
+ALB
+# Parameter: predefinedSslPolicy
+#
+# Expectations:
+# a) COMPLIANT if the ALB listener ssl policy is EQUAL to predefinedSslPolicy parameter value
+# b) NON_COMPLIANT if the ALB listener ssl policy is ANYTHING OTHER THAN predefinedSslPolicy parameter 
+value
+# c) NOT_APPLICABLE if the ALB listener protocol is not HTTPS. This should skip both NLB and Gateway Load 
+Balancer as well
+
+let alb_listener_ssl_policy = configuration.SslPolicy
+let alb_listener_protocol = configuration.Protocol
+rule alb_listener_ssl_policy_check{
+when %alb_listener_protocol == 'HTTPS'{
+%alb_listener_ssl_policy == CONFIG_RULE_PARAMETERS.predefinedSslPolicy <<
+result: NON_COMPLIANT
+message: The ALB listener's policy does not match the desired policy.
+>>
+}
+}
