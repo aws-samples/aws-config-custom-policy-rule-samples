@@ -1,0 +1,59 @@
+# Rule intent: This rule checks if RDS database instances and clusters are running approved minimum versions
+# for various database engines including MySQL, PostgreSQL, Oracle, SQL Server, 
+# MariaDB, and Aurora variants. It requires the following parameters: mysql_version, postgres_version, oracle_version, sqlserver_version, mariadb_version, aurora_mysql_version, aurora_postgres_version.
+#
+# Parameters:
+# This rule has a parameter per DB engine. Each DB engine will have its own minimum version.
+#
+# mysql_version (example value 8.0.39)
+# postgres_version (example value 16.4)
+# oracle_version (example value 19.0.0)
+# sqlserver_version (example value 15.00.4198.2)
+# mariadb_version (example value 11.4.4)
+# aurora_mysql_version (example value 8.0.mysql_aurora.3.05.2)
+# aurora_postgres_version (example value 16.5)
+#
+# Expectations:
+# a) COMPLIANT when a DB engine version is greater or equal to the version value in the parameters. 
+# b) NON_COMPLIANT when a DB engine version isn't greater or equal to the version value in the parameters.
+
+rule RDS_VERSION_CHECK_INSTANCE when
+resourceType == "AWS::RDS::DBInstance" {
+    let engineType = this.configuration.engine
+    let engineVersion = this.configuration.engineVersion
+    
+    when %engineType == "mysql" {
+        %engineVersion >= CONFIG_RULE_PARAMETERS.mysql_version
+    }
+    when %engineType == "postgres" {
+        %engineVersion >= CONFIG_RULE_PARAMETERS.postgres_version
+    }
+    when %engineType == "oracle" {
+        %engineVersion >= CONFIG_RULE_PARAMETERS.oracle_version
+    }
+    when engineType == "sqlserver" {
+        engineVersion >= CONFIG_RULE_PARAMETERS.sqlserver_version
+    }
+    when %engineType == "mariadb" {
+        %engineVersion >= CONFIG_RULE_PARAMETERS.mariadb_version
+    }
+    when %engineType == "aurora-mysql" {
+        %engineVersion >= CONFIG_RULE_PARAMETERS.aurora_mysql_version
+    }
+    when %engineType == "aurora-postgresql" {
+        %engineVersion >= CONFIG_RULE_PARAMETERS.aurora_postgres_version
+    }
+}
+
+rule RDS_VERSION_CHECK_CLUSTER when
+resourceType == "AWS::RDS::DBCluster" {
+    let engineType = this.configuration.engine
+    let engineVersion = this.configuration.engineVersion
+    
+    when %engineType == "aurora-mysql" {
+        %engineVersion >= CONFIG_RULE_PARAMETERS.aurora_mysql_version
+    }
+    when %engineType == "aurora-postgresql" {
+        %engineVersion >= CONFIG_RULE_PARAMETERS.aurora_postgres_version
+    }
+}
