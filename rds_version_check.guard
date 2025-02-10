@@ -1,7 +1,21 @@
-# This rule checks if RDS database instances and clusters are running approved minimum versions
+# Rule intent: This rule checks if RDS database instances and clusters are running approved minimum versions
 # for various database engines including MySQL, PostgreSQL, Oracle, SQL Server, 
 # MariaDB, and Aurora variants. It requires the following parameters: mysql_version, postgres_version, oracle_version, sqlserver_version, mariadb_version, aurora_mysql_version, aurora_postgres_version.
-#If a DB engine doesn't meet the minimum required enginer version, the resource will report as non compliant.
+#
+# Parameters:
+# This rule has a parameter per DB engine. Each DB engine will have its own minimum version.
+#
+# mysql_version (example value 8.0.39)
+# postgres_version (example value 16.4)
+# oracle_version (example value 19.0.0)
+# sqlserver_version (example value 15.00.4198.2)
+# mariadb_version (example value 11.4.4)
+# aurora_mysql_version (example value 8.0.mysql_aurora.3.05.2)
+# aurora_postgres_version (example value 16.5)
+#
+# Expectations:
+# a) COMPLIANT when a DB engine version is greater or equal to the version value in the parameters. 
+# b) NON_COMPLIANT when a DB engine version isn't greater or equal to the version value in the parameters.
 
 rule RDS_VERSION_CHECK_INSTANCE when
 resourceType == "AWS::RDS::DBInstance" {
